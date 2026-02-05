@@ -42,15 +42,16 @@ function Estudiantes(){
         ))
         console.log(estudianteSeleccionado);
     }
+     
 
     const editarEstudiante = () =>{
-        var datos_nuevos = data;
-        datos_nuevos.map(estudiante => {
+        var datos_nuevos = data.map(estudiante => {
             if (estudiante.id === estudianteSeleccionado.id){
                 estudiante.cedula = estudianteSeleccionado.cedula;
                 estudiante.nombre = estudianteSeleccionado.nombre;
                 estudiante.apellido = estudianteSeleccionado.apellido;
             }
+            return estudiante;
         })
         // seteo mi variable de estado de los estudiantes
         setData(datos_nuevos);
