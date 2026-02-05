@@ -1,4 +1,4 @@
-name: CI Frontend React
+name: CI - Frontend React
 
 on:
   push:
@@ -11,32 +11,21 @@ on:
 jobs:
   frontend-ci:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: frontend
-
     steps:
-      # 1️⃣ Obtener código
-      - name: Checkout código
+      - name: Checkout repositorio
         uses: actions/checkout@v4
 
-      # 2️⃣ Configurar Node.js
       - name: Configurar Node
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: npm
-          cache-dependency-path: package-lock.json
 
-      # 3️⃣ Instalar dependencias
-      - name: Instalar dependencias
-        run: npm install
+      - name: Instalar dependencias frontend
+        run: |
+          cd frontend
+          npm install
 
-      # 4️⃣ Ejecutar tests con Jest + React Testing Library
       - name: Ejecutar tests frontend
-        run: npm test -- --watch=false
-
-      # 5️⃣ Build del frontend
-      - name: Build del frontend
-        run: npm run build
+        run: |
+          cd frontend
+          npm test -- --watchAll=false

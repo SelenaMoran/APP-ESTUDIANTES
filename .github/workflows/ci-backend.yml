@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Obtener código
+      # 1️⃣ Checkout del repositorio
       - name: Checkout repositorio
         uses: actions/checkout@v4
 
@@ -29,13 +29,13 @@ jobs:
           cd backend
           npm install
 
-      # 4️⃣ Ejecutar tests con Jest (y Supertest si lo agregas)
+      # 4️⃣ Ejecutar tests con Jest + Supertest
       - name: Ejecutar tests backend
         run: |
           cd backend
-          npm test -- --watch=false
+          npx jest --watchAll=false
 
-      # 5️⃣ Build / verificación simulada del backend
+      # 5️⃣ Build / verificación simulada (opcional)
       - name: Verificar backend (simulado)
         run: |
           cd backend
