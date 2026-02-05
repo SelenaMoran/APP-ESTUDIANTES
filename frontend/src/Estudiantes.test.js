@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Estudiantes from './Estudiantes';
+import Estudiantes from './Components/Estudiantes.jsx';
+
 
 describe('Componente Estudiantes', () => {
 

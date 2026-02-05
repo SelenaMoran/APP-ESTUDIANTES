@@ -11,6 +11,7 @@ on:
 jobs:
   frontend-ci:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repositorio
         uses: actions/checkout@v4
