@@ -1,0 +1,33 @@
+name: CI - Backend Node
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "backend/**"
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  backend-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias backend
+        run: |
+          cd backend
+          npm install
+
+      - name: Verificar backend
+        run: |
+          cd backend
+          node index.js &
+          sleep 3

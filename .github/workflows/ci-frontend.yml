@@ -1,0 +1,45 @@
+name: CI - Frontend React
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "frontend/**"
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  frontend-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias
+        run: |
+          cd frontend
+          npm install
+
+      - name: Ejecutar tests
+        run: |
+          cd frontend
+          npm test -- --watch=false
+        env:
+          CI: true
+
+      - name: Build del frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Subir artefacto frontend
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/build/
