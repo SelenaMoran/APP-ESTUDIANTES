@@ -13,20 +13,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Obtener código
       - name: Checkout repositorio
         uses: actions/checkout@v4
 
+      # 2️⃣ Configurar Node.js
       - name: Configurar Node
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
+      # 3️⃣ Instalar dependencias
       - name: Instalar dependencias backend
         run: |
           cd backend
           npm install
 
-      - name: Verificar backend
+      # 4️⃣ Ejecutar tests con Jest (y Supertest si lo agregas)
+      - name: Ejecutar tests backend
+        run: |
+          cd backend
+          npm test -- --watch=false
+
+      # 5️⃣ Build / verificación simulada del backend
+      - name: Verificar backend (simulado)
         run: |
           cd backend
           node index.js &
