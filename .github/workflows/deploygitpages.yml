@@ -1,0 +1,37 @@
+name: Deploy Frontend a GitHub Pages
+
+on:
+  workflow_dispatch:       # permite ejecutar manualmente
+  push:
+    branches:
+      - main              # se ejecuta automáticamente al hacer push a main
+
+jobs:
+  deploy-gh-pages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias frontend
+        run: |
+          cd frontend
+          npm install --silent
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Deploy a GitHub Pages
+        run: |
+          cd frontend
+          npm run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
