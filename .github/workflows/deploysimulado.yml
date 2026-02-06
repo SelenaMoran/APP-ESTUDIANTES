@@ -1,11 +1,18 @@
 name: Deploy Simulado
 
-# Cambio: ahora se puede ejecutar manualmente
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # permite correrlo manualmente
+  workflow_run:
+    workflows: 
+      - "CI - Frontend React"
+      - "CI - Backend Node"
+    types:
+      - completed
 
 jobs:
   deploy:
+    # Si se ejecuta por workflow_run, solo si los CI fueron exitosos
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -32,12 +39,3 @@ jobs:
 
       - name: Crear artefacto final
         run: |
-          mkdir -p deploy
-          cp -r backend deploy/backend
-          cp -r frontend/build deploy/frontend
-          echo "Artefacto preparado."
-
-      - name: Simulación de despliegue
-        run: |
-          echo "Desplegando en entorno ficticio..."
-          echo "Despliegue completado."
