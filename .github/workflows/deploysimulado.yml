@@ -1,14 +1,11 @@
 name: Deploy Simulado
 
+# Cambio: ahora se puede ejecutar manualmente
 on:
-  workflow_run:
-    workflows: ["CI Backend", "CI Frontend"]
-    types:
-      - completed
+  workflow_dispatch:
 
 jobs:
   deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -24,24 +21,23 @@ jobs:
         run: |
           cd backend
           npm install
-          echo "Backend build simulado completado."
+          echo "Compilación backend simulada."
 
       - name: Build del frontend (simulado)
         run: |
           cd frontend
           npm install
           npm run build
-          echo "Frontend build simulado completado."
+          echo "Frontend build completado (simulado)."
 
-      - name: Preparar artefacto de deploy
+      - name: Crear artefacto final
         run: |
-          mkdir -p deploy/backend
-          mkdir -p deploy/frontend
-          cp -r backend/* deploy/backend/
-          cp -r frontend/build/* deploy/frontend/
-          echo "Artefacto listo."
+          mkdir -p deploy
+          cp -r backend deploy/backend
+          cp -r frontend/build deploy/frontend
+          echo "Artefacto preparado."
 
       - name: Simulación de despliegue
         run: |
-          echo "Deploy simulado en entorno ficticio..."
-          echo "¡Despliegue completado!"
+          echo "Desplegando en entorno ficticio..."
+          echo "Despliegue completado."
