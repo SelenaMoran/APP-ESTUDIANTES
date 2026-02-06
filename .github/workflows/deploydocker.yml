@@ -1,0 +1,73 @@
+name: Deploy Simulado con Docker
+
+on:
+  workflow_dispatch:  # ejecución manual
+  workflow_run:
+    workflows: 
+      - "CI - Frontend React"
+      - "CI - Backend Node"
+    types:
+      - completed
+
+jobs:
+  deploy:
+    # Si es workflow_run, solo ejecuta si ambos CI pasaron
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      # -----------------------------
+      # Backend Docker
+      # -----------------------------
+      - name: Build Docker Backend
+        run: |
+          cd backend
+          docker build -t mi-backend:simulado .
+
+      - name: Run Docker Backend (simulado)
+        run: |
+          docker run --name backend-temp -d mi-backend:simulado
+          echo "Backend corriendo dentro de contenedor (simulado)..."
+          docker stop backend-temp
+          docker rm backend-temp
+
+      # -----------------------------
+      # Frontend Docker
+      # -----------------------------
+      - name: Build Docker Frontend
+        run: |
+          cd frontend
+          docker build -t mi-frontend:simulado .
+
+      - name: Run Docker Frontend (simulado)
+        run: |
+          docker run --name frontend-temp -d -p 8080:80 mi-frontend:simulado
+          echo "Frontend corriendo dentro de contenedor (simulado)..."
+          docker stop frontend-temp
+          docker rm frontend-temp
+
+      # -----------------------------
+      # Crear artefacto final
+      # -----------------------------
+      - name: Crear artefacto final
+        run: |
+          mkdir -p deploy
+          cp -r backend deploy/backend
+          cp -r frontend/build deploy/frontend
+          echo "Artefacto preparado."
+
+      # -----------------------------
+      # Simulación de despliegue
+      # -----------------------------
+      - name: Simulación de despliegue
+        run: |
+          echo "Desplegando en entorno ficticio usando Docker..."
+          echo "Deploy completado ✅"
